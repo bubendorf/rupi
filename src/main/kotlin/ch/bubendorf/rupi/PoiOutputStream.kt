@@ -7,9 +7,6 @@ class PoiOutputStream() : ByteArrayOutputStream() {
 
     fun writeIndex(index: Int, value: Int): Int {
         val oldSize = size()
-        if (index > oldSize + 4) {
-            throw IOException("Rewrite isn't possible: index too large.")
-        }
         count = index
         writeSwapInt(value)
         val newSize = size()
@@ -17,7 +14,7 @@ class PoiOutputStream() : ByteArrayOutputStream() {
         return newSize
     }
 
-    fun writeUTFStringWithLength(text: String) {
+    fun writeSpecialStringWthLength(text: String) {
         val bytes = text.toByteArray(charset("utf-8"))
         if (bytes.size > text.length) {
             write(15)
@@ -28,11 +25,16 @@ class PoiOutputStream() : ByteArrayOutputStream() {
         write(bytes)
     }
 
-    fun writeISOStringWithLength(text: String) {
-//        val bytes = text.toByteArray(charset("iso-8859-1"))
+    fun writeStringWithLength(text: String) {
         val bytes = text.toByteArray(charset("utf-8"))
         writeSwapInt(bytes.size or Integer.MIN_VALUE)
         write(bytes)
+    }
+
+    fun writeUnicodeString(text: String) {
+        for (i in 0 until text.length) {
+            writeShort(compress(text.codePointAt(i)))
+        }
     }
 
     fun writeString(t: String) {
@@ -58,4 +60,10 @@ class PoiOutputStream() : ByteArrayOutputStream() {
     private fun swap(i: Int): Int {
         return i shr 24 and 255 or (65280 and (i shr 8)) or (16711680 and (i shl 8)) or (-16777216 and (i shl 24))
     }
+
+    private fun compress(i: Int): Int {
+        return i shr 8 and 0x00FF or (0xFF00 and (i shl 8))
+    }
+
+
 }

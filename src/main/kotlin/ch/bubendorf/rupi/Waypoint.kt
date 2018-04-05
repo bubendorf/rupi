@@ -1,5 +1,6 @@
 package ch.bubendorf.rupi
 
+// Aus der Sygic Dokumentation:
 // For each POI the parameters must be arranged in following order:
 // longitude | latitude | name | address | phone | fax | web | email | short description | long description
 

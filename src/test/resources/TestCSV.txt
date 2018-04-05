@@ -2,4 +2,4 @@ delimiter=|
 7.7377|47.428783|Sormattfall Bubendorf|||||||
 7.544117|47.43565|Name|Address|Phone|Fax|Web|eMail|ShortDesc|LongDesc
 7.421933|47.4019|Ammoniten In Liesberg|||||||
-7.543033|47.545917|OberrheingrabenAllsc|Hint: 1.+2. "Sehr aufschlussreich"3. Tabelle unten4. "Quellhorizont" ist keine Erdschicht sondern der Grundwasserspiegel, ||||||
+7.543033|47.545917|Oberrheingraben Allschwil|Hint: 1.+2. "Sehr aufschlussreich"3. Tabelle unten4. "Quellhorizont" ist keine Erdschicht sondern der Grundwasserspiegel, ||||||

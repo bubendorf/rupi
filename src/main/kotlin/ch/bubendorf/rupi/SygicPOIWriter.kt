@@ -7,15 +7,13 @@ class SygicPOIWriter(val name: String, val outputFile: String) {
     fun write(waypoints: Collection<Waypoint>) {
 
         val out = PoiOutputStream()
-        out.writeString("IPUR")
+        out.writeString("IPUR") // Magic number to identify the file as a RUPI file
         out.writeSwapInt(codePointCount(name));
-        out.writeString("2000");
+        out.writeString("2000"); // File Format Version Number
         out.writeSwapInt(waypoints.size + 1);
         out.writeShort(compress(name.length))
-        for (i in 0 until name.length) {
-            out.writeShort(compress(name.codePointAt(i)))
-        }
-        out.write(1) // Falsch hier, aber was?
+        out.writeUnicodeString(name)
+        out.write(1)
         out.write(0)
         out.write(0)
         out.write(0)
@@ -43,11 +41,11 @@ class SygicPOIWriter(val name: String, val outputFile: String) {
             out.write(1)
             out.writeSwapInt(i + 1)
             out.write(byteArrayOf(0.toByte(), 1.toByte(), 0.toByte(), 0.toByte(), 0.toByte()))
-            out.writeUTFStringWithLength(waypoint.name)
+            out.writeSpecialStringWthLength(waypoint.name)
             out.writeSwapInt(waypoint.longitudeInt)
             out.writeSwapInt(waypoint.latitudeInt)
 
-            out.writeISOStringWithLength(waypoint.address)
+            out.writeStringWithLength(waypoint.address)
             out.writeInt(0x80)
             out.write(1)
             out.writeInt(0)
@@ -61,18 +59,18 @@ class SygicPOIWriter(val name: String, val outputFile: String) {
             out.writeInt(0x80)
             out.write(1)
             out.writeInt(0)
-            out.writeISOStringWithLength(waypoint.shortDescription)
+            out.writeStringWithLength(waypoint.shortDescription)
             out.write(1)
             out.writeInt(0)
-            out.writeISOStringWithLength(waypoint.longDescription)
+            out.writeStringWithLength(waypoint.longDescription)
             out.writeInt(-1)
             out.writeInt(-1)
             out.writeInt(0x80)
             out.writeInt(0x80)
-            out.writeISOStringWithLength(waypoint.phone)
-            out.writeISOStringWithLength(waypoint.fax)
-            out.writeISOStringWithLength(waypoint.email)
-            out.writeISOStringWithLength(waypoint.web)
+            out.writeStringWithLength(waypoint.phone)
+            out.writeStringWithLength(waypoint.fax)
+            out.writeStringWithLength(waypoint.email)
+            out.writeStringWithLength(waypoint.web)
             out.writeInt(0x80)
             out.writeInt(0x80)
             out.writeInt(0x80)
