@@ -1,6 +1,7 @@
 package ch.bubendorf.rupi
 
 import org.apache.commons.io.FilenameUtils
+import org.slf4j.LoggerFactory
 import java.io.File
 import java.io.FileInputStream
 import java.io.InputStreamReader
@@ -21,6 +22,8 @@ class RupiConverter(
         var inputFile: String = "",
         var outputFile: String = "") {
 
+    private val LOGGER = LoggerFactory.getLogger(RupiConverter::class.java.simpleName)
+
     fun convert() {
         // Erst mal die Parameter ergänzen falls diese leer sind
         val filename = FilenameUtils.getBaseName(inputFile)!!
@@ -37,6 +40,7 @@ class RupiConverter(
                 outputFile
             }
         }
+        LOGGER.info("Converting $categoryName")
 
         // Die Datei in den Speicher laden
         val reader = InputStreamReader(FileInputStream(inputFile), "iso-8859-1")
@@ -59,7 +63,7 @@ class RupiConverter(
             // Write to RUPI file
             SygicPOIWriter(categoryName, outFile).write(waypoints)
 
-//            println("Converted ${waypoints.size} waypoints")
+            LOGGER.info("$categoryName-Converted ${waypoints.size} waypoints to $outFile")
         }
     }
 }
