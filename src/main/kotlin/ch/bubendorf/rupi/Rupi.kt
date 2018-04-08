@@ -1,6 +1,9 @@
 package ch.bubendorf.rupi
 
 import com.beust.jcommander.JCommander
+import org.slf4j.LoggerFactory
+import java.nio.file.Files
+import java.nio.file.Paths
 
 /*
 Ein paar Feststellungen:
@@ -12,7 +15,11 @@ Ein paar Feststellungen:
   Dateinamen ein _ vorangestellt und es wird eine Datei _*.bmp.3d.bmp erzeugt.
 - Die RUPI Dateien kommen 1:1 nach .../Android/data/com.sygic.aura/files/Maps/rupi/<Land>.
   Der Dateiname wird dabei durch einen Zeitstempel (Sekunden seit 01.01.1970 * 36000) ersetzt.
+- Die *.rupi Dateien können auch direkt ins .../rupi/<Land> Verzeichnis kopiert werden. Der Dateiname
+  ist beliebig.
  */
+
+private val LOGGER = LoggerFactory.getLogger(RupiConverter::class.java.simpleName)
 
 fun main(args: Array<String>) {
     val cmdArgs = CommandLineArguments()
@@ -29,7 +36,11 @@ fun main(args: Array<String>) {
     }
 
     cmdArgs.inputFiles.forEach { inputFile ->
-        RupiConverter(cmdArgs.name, inputFile, cmdArgs.outputPath).convert()
+        if (Files.exists(Paths.get(inputFile))) {
+            RupiConverter(cmdArgs.name, inputFile, cmdArgs.outputPath).convert()
+        } else {
+            LOGGER.error("File $inputFile does not exist - Ignoring")
+        }
     }
 
     System.exit(0)

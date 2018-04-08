@@ -12,8 +12,8 @@ class CommandLineArguments {
     @Parameter(names = arrayOf("-h", "--help"), help = true)
     var isHelp: Boolean = false
 
-    @Parameter(names = arrayOf("-v", "--verbose"))
-    var isVerbose: Boolean = false
+    /*@Parameter(names = arrayOf("-v", "--verbose"))
+    var isVerbose: Boolean = false*/
 
     @Parameter(names = arrayOf("-o", "--outputPath"), description = "Output path", required = false)
     var outputPath = "."
@@ -21,14 +21,15 @@ class CommandLineArguments {
     @Parameter(names = arrayOf("-n", "--name"), description = "name", required = false)
     var name = ""
 
-    @Parameter(names = arrayOf("-t", "--tasks"), description = "Number of parallel tasks", required = false)
-    var tasks = -1
+    /*@Parameter(names = arrayOf("-t", "--tasks"), description = "Number of parallel tasks", required = false)
+    var tasks = -1*/
 
     @Parameter(description = "input files")
     var inputFiles = ArrayList<String>()
 
     val isValid: Boolean
         get() {
+            // Check if the outout path exists
             val outputPathFile = File(outputPath)
             if (!outputPathFile.exists() || !outputPathFile.isDirectory) {
                 LOGGER.error("Output path '$outputPath' does not exist or is not a directory!")

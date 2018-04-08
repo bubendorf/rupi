@@ -13,16 +13,16 @@ class SygicPOIWriter(val name: String, val outputFile: String) {
         out.writeSwapInt(waypoints.size + 1);
         out.writeShort(compress(name.length))
         out.writeUnicodeString(name)
-        out.write(1)
+        out.write(1) // Oder 0x08 (Mehrteiliges RUPI?)
         out.write(0)
         out.write(0)
         out.write(0)
 
         val boundingBox = BoundingBox(waypoints)
-        out.writeSwapInt(boundingBox.maxLonInt)
-        out.writeSwapInt(boundingBox.minLatInt)
         out.writeSwapInt(boundingBox.minLonInt)
         out.writeSwapInt(boundingBox.maxLatInt)
+        out.writeSwapInt(boundingBox.maxLonInt)
+        out.writeSwapInt(boundingBox.minLatInt)
         out.writeSwapInt(out.size() + 4 or Integer.MIN_VALUE)
         out.writeSwapInt(waypoints.size)
 
