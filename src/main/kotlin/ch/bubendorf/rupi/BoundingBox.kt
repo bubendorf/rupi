@@ -2,11 +2,11 @@ package ch.bubendorf.rupi
 
 
 class BoundingBox(list: Collection<Waypoint>) {
-    var maxLatitude = -90.0
     var minLatitude = 90.0
+    var maxLatitude = -90.0
 
-    var maxLongitude = -180.0
     var minLongitude = 180.0
+    var maxLongitude = -180.0
 
     val maxLatInt: Int
         get() = Math.round(maxLatitude * 100000.0).toInt()
@@ -36,4 +36,10 @@ class BoundingBox(list: Collection<Waypoint>) {
             }
         }
     }
+
+    override fun toString(): String {
+        return "BoundingBox(minLatitude=$minLatitude, maxLatitude=$maxLatitude, minLongitude=$minLongitude, maxLongitude=$maxLongitude)"
+    }
+
+
 }

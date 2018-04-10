@@ -13,7 +13,7 @@ class SygicPOIWriter(val name: String, val outputFile: String) {
         out.writeSwapInt(waypoints.size + 1);
         out.writeShort(compress(name.length))
         out.writeUnicodeString(name)
-        out.write(1) // Oder 0x08 (Mehrteiliges RUPI?)
+        out.write(1) // Anzahl der Bounding Boxes (1, 2, 4, 7 oder 8)!
         out.write(0)
         out.write(0)
         out.write(0)
@@ -23,7 +23,7 @@ class SygicPOIWriter(val name: String, val outputFile: String) {
         out.writeSwapInt(boundingBox.maxLatInt)
         out.writeSwapInt(boundingBox.maxLonInt)
         out.writeSwapInt(boundingBox.minLatInt)
-        out.writeSwapInt(out.size() + 4 or Integer.MIN_VALUE)
+        out.writeSwapInt(out.size() + 4 or Integer.MIN_VALUE) // Index zu den Indizes dieser BBox?
         out.writeSwapInt(waypoints.size)
 
         // Make room for the index

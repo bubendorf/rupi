@@ -62,8 +62,8 @@ class RupiConverter(
 
             // Write to RUPI file
             SygicPOIWriter(categoryName, outFile).write(waypoints)
-
-            LOGGER.info("$categoryName-Converted ${waypoints.size} waypoints to $outFile")
+            val bb = BoundingBox(waypoints)
+            LOGGER.info("$categoryName-Converted ${waypoints.size} waypoints to $outFile ($bb)")
         }
     }
 }
