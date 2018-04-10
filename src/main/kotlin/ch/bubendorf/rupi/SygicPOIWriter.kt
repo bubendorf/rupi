@@ -2,15 +2,17 @@ package ch.bubendorf.rupi
 
 import java.io.FileOutputStream
 
-class SygicPOIWriter(val name: String, val outputFile: String) {
+class SygicPOIWriter(
+        private val name: String,
+        private val outputFile: String) {
     // name: Name der Kategorie. Auch die *.bmp Datei muss genau diesen Namen haben!
     fun write(waypoints: Collection<Waypoint>) {
 
         val out = PoiOutputStream()
         out.writeString("IPUR") // Magic number to identify the file as a RUPI file
-        out.writeSwapInt(codePointCount(name));
-        out.writeString("2000"); // File Format Version Number
-        out.writeSwapInt(waypoints.size + 1);
+        out.writeSwapInt(codePointCount(name))
+        out.writeString("2000") // File Format Version Number
+        out.writeSwapInt(waypoints.size + 1)
         out.writeShort(compress(name.length))
         out.writeUnicodeString(name)
         out.write(1) // Anzahl der Bounding Boxes (1, 2, 4, 7 oder 8)!
@@ -84,7 +86,7 @@ class SygicPOIWriter(val name: String, val outputFile: String) {
         for (offset in offsets) {
             position = out.writeIndex(position, offset)
         }
-        val outStream = FileOutputStream(outputFile)
+        val outStream = FileOutputStream(outputFile + ".rupi")
         outStream.write(out.toByteArray())
         outStream.close()
     }

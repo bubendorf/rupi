@@ -20,6 +20,18 @@ class BoundingBox(list: Collection<Waypoint>) {
     val minLonInt: Int
         get() = Math.round(minLongitude * 100000.0).toInt()
 
+    fun getHeightInMeters(): Double {
+        val p1 = Coordinate((maxLongitude + minLongitude) / 2, minLatitude)
+        val p2 = Coordinate((maxLongitude + minLongitude) / 2, maxLatitude)
+        return p1.getDistanceTo(p2)
+    }
+
+    fun getWidthtInMeters(): Double {
+        val p1 = Coordinate((maxLatitude + minLatitude) / 2, minLongitude)
+        val p2 = Coordinate((maxLatitude + minLatitude) / 2, maxLongitude)
+        return p1.getDistanceTo(p2)
+    }
+
     init {
         for (waypoint in list) {
             if (waypoint.latitude > maxLatitude) {

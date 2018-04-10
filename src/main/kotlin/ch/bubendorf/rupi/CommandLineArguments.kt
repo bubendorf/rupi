@@ -21,6 +21,9 @@ class CommandLineArguments {
     @Parameter(names = arrayOf("-n", "--name"), description = "name", required = false)
     var name = ""
 
+    @Parameter(names = arrayOf("-c", "--count"), description = "Split outout file after that many waypoints", required = false)
+    var count = 1000
+
     /*@Parameter(names = arrayOf("-t", "--tasks"), description = "Number of parallel tasks", required = false)
     var tasks = -1*/
 
@@ -29,7 +32,7 @@ class CommandLineArguments {
 
     val isValid: Boolean
         get() {
-            // Check if the outout path exists
+            // Check if the output path exists
             val outputPathFile = File(outputPath)
             if (!outputPathFile.exists() || !outputPathFile.isDirectory) {
                 LOGGER.error("Output path '$outputPath' does not exist or is not a directory!")

@@ -4,9 +4,9 @@ package ch.bubendorf.rupi
 // For each POI the parameters must be arranged in following order:
 // longitude | latitude | name | address | phone | fax | web | email | short description | long description
 
-data class Waypoint
-constructor(val longitude: Double,
-            val latitude: Double,
+class Waypoint
+constructor(longitude: Double,
+            latitude: Double,
             val name: String,
             val address: String = "",
             val phone: String = "",
@@ -14,7 +14,7 @@ constructor(val longitude: Double,
             val web: String = "",
             val email: String = "",
             val shortDescription: String = "",
-            val longDescription: String = "") {
+            val longDescription: String = "") : Coordinate(longitude, latitude) {
     val longitudeInt = Math.round(longitude * 100000.0).toInt()
     val latitudeInt = Math.round(latitude * 100000.0).toInt()
 
@@ -31,4 +31,6 @@ constructor(val longitude: Double,
             if (record.size > 9) record[9] else "")
 
     constructor(record: Array<String>) : this(record.toList())
+
+
 }

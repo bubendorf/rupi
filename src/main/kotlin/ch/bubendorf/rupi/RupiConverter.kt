@@ -6,23 +6,24 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.InputStreamReader
 import java.nio.file.Files
-import java.nio.file.Path
 import java.nio.file.Paths
 
 /**
  * Konvertiert eine einzelne CSV Datei ins RUPI Format
  * @property name Der Name der POI Kategorie in der RUPI Datei. Falls leer, dann wird der Dateiname ohne Endung verwendet.
  * @property inputFile Der Name der CSV Datei. Muss gesetzt sein und die Datei muss existieren und muss lesbar sein.
- * @property outputFile Der Name der RUPI Datei oder des Verzeichnisses in welches die RUPI Datei geschrieben wird.
+ * @property outputPath Der Name der RUPI Datei oder des Verzeichnisses in welches die RUPI Datei geschrieben wird.
  * Der Dateiname wird in diesem Falle vom Namen von inputFile abgeleitet. Falls leer dann wird der Name von inputFile genommen
  * und die Erweiterung durch ".rupi" ersetzt.
  */
 class RupiConverter(
-        var name: String = "",
-        var inputFile: String = "",
-        var outputFile: String = "") {
+        private var name: String = "",
+        private var inputFile: String = "",
+        private var outputPath: String = "",
+        private val maxNumberOfWaypoints: Int = 1000) {
 
     private val LOGGER = LoggerFactory.getLogger(RupiConverter::class.java.simpleName)
+    private var fileCount = 0
 
     fun convert() {
         // Erst mal die Parameter ergänzen falls diese leer sind
@@ -31,13 +32,13 @@ class RupiConverter(
         val inputPath = FilenameUtils.getPath(inputFile)!!
         val categoryName = if (name != "") name else filenameWOExtension
 
-        val outFile = if (outputFile == "") {
-            inputPath + filenameWOExtension + ".rupi"
+        val outFile = if (outputPath == "") {
+            inputPath + filenameWOExtension
         } else {
-            if (Files.isDirectory(Paths.get(outputFile))) {
-                outputFile + File.separator + filenameWOExtension + ".rupi"
+            if (Files.isDirectory(Paths.get(outputPath))) {
+                outputPath + File.separator + filenameWOExtension
             } else {
-                outputFile
+                outputPath
             }
         }
         LOGGER.info("Converting $categoryName")
@@ -60,10 +61,60 @@ class RupiConverter(
                     .filter { it.size >= 3 && it[0].isNotBlank() && it[1].isNotBlank() && it[2].isNotBlank() }
                     .map { Waypoint(it) }
 
-            // Write to RUPI file
-            SygicPOIWriter(categoryName, outFile).write(waypoints)
             val bb = BoundingBox(waypoints)
-            LOGGER.info("$categoryName-Converted ${waypoints.size} waypoints to $outFile ($bb)")
+            LOGGER.info("BoundingBox: $bb, width=${bb.getWidthtInMeters().toInt()}m, height=${bb.getHeightInMeters().toInt()}m")
+
+            if (waypoints.size <= maxNumberOfWaypoints) {
+                // Write everything to RUPI file
+                SygicPOIWriter(categoryName, outFile + ".rupi").write(waypoints)
+                LOGGER.info("$categoryName-Converted ${waypoints.size} waypoints to $outFile ($bb)")
+            } else {
+                // Split into multiple files!
+                convert(categoryName, outFile, waypoints)
+            }
         }
+    }
+
+    private fun convert(categoryName: String, outFile: String, waypoints: List<Waypoint>) {
+
+        if (waypoints.size <= maxNumberOfWaypoints) {
+            // Genug klein ==> Raus schreiben
+            fileCount++
+            val outputFile = outFile + "." + fileCount + ".rupi"
+            SygicPOIWriter(categoryName, outputFile).write(waypoints)
+            LOGGER.info("$categoryName-Converted ${waypoints.size} waypoints to $outputFile (${BoundingBox(waypoints)})")
+        } else if (waypoints.size <= 2 * maxNumberOfWaypoints) {
+            // Exakt Halbe-Halbe machen
+            splitConvert(categoryName, outFile, waypoints, 0.5)
+        } else if (waypoints.size <= 3 * maxNumberOfWaypoints) {
+            // Ein Drittel, zwei Drittel machen
+            splitConvert(categoryName, outFile, waypoints, 1.0 / 3)
+        } else {
+            // Auf  das nächste maxNumberOfWaypoints abgerundete verwenden
+            val firstListSize = (waypoints.size / 2 / maxNumberOfWaypoints) * maxNumberOfWaypoints
+            val splitPosition = firstListSize.toDouble() / waypoints.size
+            splitConvert(categoryName, outFile, waypoints, splitPosition)
+        }
+    }
+
+    private fun splitConvert(categoryName: String, outputFile: String, waypoints: List<Waypoint>, splitPosition: Double) {
+        val bBox = BoundingBox(waypoints)
+        LOGGER.debug("BBox=$bBox, size=${waypoints.size}")
+
+        // Ja nach dem die Liste der Wegpunkte entlang der Latitude oder entlang der Longitude sortieren
+        val heightInMeters = bBox.getHeightInMeters()
+        val widthtInMeters = bBox.getWidthtInMeters()
+        val sortedWaypoints = if (heightInMeters < widthtInMeters) {
+            waypoints.sortedBy { coordinate -> coordinate.longitude }
+        } else {
+            waypoints.sortedBy { coordinate -> coordinate.latitude }
+        }
+
+        val splitIndex = (sortedWaypoints.size * splitPosition).toInt()
+        val firstList = sortedWaypoints.subList(0, splitIndex)
+        val secondList = sortedWaypoints.subList(splitIndex, waypoints.size)
+
+        convert(categoryName, outputFile, firstList)
+        convert(categoryName, outputFile, secondList)
     }
 }
