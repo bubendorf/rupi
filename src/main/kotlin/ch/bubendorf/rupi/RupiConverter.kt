@@ -66,8 +66,8 @@ class RupiConverter(
 
             if (waypoints.size <= maxNumberOfWaypoints) {
                 // Write everything to RUPI file
-                SygicPOIWriter(categoryName, outFile + ".rupi").write(waypoints)
-                LOGGER.info("$categoryName-Converted ${waypoints.size} waypoints to $outFile ($bb)")
+                SygicPOIWriterV1(categoryName, outFile + ".rupi").write(waypoints)
+                LOGGER.info("$categoryName-Converted ${waypoints.size} waypoints to ${outFile + ".rupi"} ($bb)")
             } else {
                 // Split into multiple files!
                 convert(categoryName, outFile, waypoints)
@@ -77,11 +77,14 @@ class RupiConverter(
 
     private fun convert(categoryName: String, outFile: String, waypoints: List<Waypoint>) {
 
-        if (waypoints.size <= maxNumberOfWaypoints) {
+        val outputFile = outFile + "." + fileCount + ".rupi"
+        SygicPOIWriterV2(categoryName, outputFile).write(waypoints)
+
+/*        if (waypoints.size <= maxNumberOfWaypoints) {
             // Genug klein ==> Raus schreiben
             fileCount++
             val outputFile = outFile + "." + fileCount + ".rupi"
-            SygicPOIWriter(categoryName, outputFile).write(waypoints)
+            SygicPOIWriterV1(categoryName, outputFile).write(waypoints)
             LOGGER.info("$categoryName-Converted ${waypoints.size} waypoints to $outputFile (${BoundingBox(waypoints)})")
         } else if (waypoints.size <= 2 * maxNumberOfWaypoints) {
             // Exakt Halbe-Halbe machen
@@ -94,7 +97,7 @@ class RupiConverter(
             val firstListSize = (waypoints.size / 2 / maxNumberOfWaypoints) * maxNumberOfWaypoints
             val splitPosition = firstListSize.toDouble() / waypoints.size
             splitConvert(categoryName, outFile, waypoints, splitPosition)
-        }
+        }*/
     }
 
     private fun splitConvert(categoryName: String, outputFile: String, waypoints: List<Waypoint>, splitPosition: Double) {

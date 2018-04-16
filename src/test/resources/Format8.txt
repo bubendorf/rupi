@@ -1,0 +1,151 @@
+Begriffe:
+Offset: Byte Offset in die Datei, kann auch das höchste Bit gesetzt haben um etwas anzuzeigen
+Length: Längen Angabe
+BBox: Bounding Box, vier Koordinaten (Nordwest / Südost)
+POI-Index: Ein Bereich mit einer Length und n Mal Offset zu POI
+BBox-Index: Ein Bereich mit einer Length und n Mal BBox plus Offset zu POI-Index oder zu BBox-Index
+POI: Ein Wegpunkt mit Name, Koordinate, Beschreibung, etc.
+
+Findings:
+
+Bei 150 POIs mit den schön sortierten Koordinaten 6.00000/46.00000 (Süd-West)
+bis 7.99999/48.99999 (Nord-Ost)
+wird Format 8 erzeugt.
+Es werden 7 + 2 Bloecke erzeugt:
+Block Nummer 1 mit POIs Nummer   1 bis  16 (16 POIs), Length 0x10 at Offset 0x00f8
+Block Nummer 2 mit POIs Nummer  17 bis  32 (16 POIs), Length 0x10 at Offset 0x0c2c
+Block Nummer 3 mit POIs Nummer  33 bis  48 (16 POIs)
+Block Nummer 4 mit POIs Nummer  49 bis  64 (16 POIs)
+Block Nummer 5 mit POIs Nummer  65 bis  80 (16 POIs)
+Block Nummer 6 mit POIs Nummer  81 bis  96 (16 POIs), Length 0x10 at Offset 0x38fc
+Block Nummer 7.1 mit POIs Nummer 129 bis 150 (22 POIs), Length 0x16 at Offset 0x4430
+Block Nummer 7.2 mit POIs Nummer 113 bis 128 (16 POIs), Length 0x10 at Offset 0x5396
+Block Nummer 8 mit POIs Nummer  97 bis 112 (16 POIs), Length 0x10 at Offset 0x5eca
+
+1. Bounding Box im Header (Direkt nach der 8, Offset 0x002c): 599999, 4630999, 798667, 4599999
+==> Voller Longitude Bereich, Latitude Bereich der POIs von Block Nummer 1 (Mehr oder weniger)
+Dann kommt ein Offset zu 0x00f8 (plus MaxInt). Dort beginnt der Index von Block 1
+(1 Length plus 16 Indizes)
+
+2. Bounding Box im Header (Offset 0x0040): 599999, 4662999, 798667, 4630999
+==> Voller Longitude Bereich, aber nur ein kleiner Bereich der Latitude!
+Dann kommt ein Offset zu 0x0c2c (Plus MaxInt)
+
+...
+7. Bounding Box im Header (Offset 0x00a4): 599999, 4897999, 798667, 4822999
+==> Voller Longitude Bereich, aber nur ein kleiner Bereich der Latitude!
+Dann kommt ein Offset zu 0x0cc (OHNE! MaxInt)
+
+8. Bounding Box im Header (Offset 0x00b8): ?
+==> Voller Longitude Bereich, ?
+Dann kommt ein Offset zu 0x5eca (Plus MaxInt)
+
+Nun kommt wieder eine Length (0x02) at Offset 0x00cc
+
+9. Bounding Box im Header (Offset 0x00d0): 599999, 4897999, 798667, 4854999
+==> Voller Longitude Bereich, Latitude Bereich ?
+Dann kommt ein Offset zu 0x4430 (Plus MaxInt)
+
+10. Bounding Box im Header (Offset 0x00e4): 599999, 4854999, 798667, 4822999
+==> Voller Longitude Bereich, Latitude Bereich ?
+Dann kommt ein Offset zu 0x5396 (Plus MaxInt)
+
+
+
+==================================================
+Bei 40 POIs mit den schön sortierten Koordinaten 8.00000/47.00000 (Süd-Ost)
+bis 7.22000/47.97500 (Nord-West) wird Format 2 erzeugt.
+
+Block Nummer 1 mit POIs Nummer 17 bis 40 (24 POIs), Length 0x18 at Offset 0x0054
+BBox: 721999, 4797499, 800001, 4738749
+
+Block Nummer 2 mit POIs Nummer 1 bis 16 (16 POIs), Length 0x10 at Offset 0x1120
+BBox: 721999, 4738749, 800001, 4699999
+
+==================================================
+Alles Tradies der Schweiz
+Der Master BBox-Index hat die Länge 8.
+
+Offset 0x30 (Master-BBox-Index, Level 0)
+08 00 00 00
+1. f0 a8 0b 00 27 f3 48 00 7b 02 10 00 56 32 48 00  d4 00 00 00 // (7.64144, 47.80839, 10.49211, 47.31478 ) Link zu BBox-Index
+2. f0 a8 0b 00 56 32 48 00 7b 02 10 00 3b 12 48 00  dc 1a 00 00 // (7.64144, 47.31478, 10.49211, 47.23259 ) Link zu BBox-Index
+3. f0 a8 0b 00 3b 12 48 00 46 d6 0b 00 7c eb 45 00  54 20 00 00 // (7.64144, 47.23259,  7.75750, 45.82268 ) Link zu BBox-Index
+4. 46 d6 0b 00 3b 12 48 00 7b 02 10 00 7c eb 45 00  04 23 00 00 // (7.75750, 47.23259, 10.49211, 45.82268 ) Link zu BBox-Index
+5. c8 16 09 00 27 f3 48 00 f0 a8 0b 00 b7 35 48 00  20 47 00 00 // (5.95656, 47.80839,  7.64144, 47.32343 ) Link zu BBox-Index
+6. c8 16 09 00 b7 35 48 00 f0 a8 0b 00 6c 1f 48 00  04 49 00 00 // (5.95656, 47.32343,  7.64144, 47.26636 ) Link zu BBox-Index
+7. c8 16 09 00 6c 1f 48 00 f0 a8 0b 00 79 00 48 00  58 49 00 00 // (5.95656, 47.26636,  7.64144, 47.18713 ) Link zu BBox-Index
+8. c8 16 09 00 79 00 48 00 f0 a8 0b 00 7c eb 45 00  e8 49 00 00 // (5.95656, 47.18713,  7.64144, 45.82268 ) Link zu BBox-Index
+
+Offset 0x00d4 (BBox-Index, Level 1)
+08 00 00 00
+f0 a8 0b 00 d3 3b 48 00 7b 02 10 00 e0 36 48 00  78 01 00 00 // Link zu BBox-Index
+f0 a8 0b 00 e0 36 48 00 7b 02 10 00 56 32 48 00  48 02 00 00 // Link zu BBox-Index
+f0 a8 0b 00 27 f3 48 00 4d bc 0b 00 d3 3b 48 00  44 03 00 00 // Link zu BBox-Index
+4d bc 0b 00 27 f3 48 00 ce cc 0b 00 d3 3b 48 00  59 91 01 80 // Link to POI-Index
+26 df 0b 00 27 f3 48 00 7b 02 10 00 01 4a 48 00  84 03 00 00 // Link zu BBox-Index
+26 df 0b 00 01 4a 48 00 7b 02 10 00 d3 3b 48 00  30 18 00 00 // Link zu BBox-Index
+ce cc 0b 00 27 f3 48 00 26 df 0b 00 b8 55 48 00  9c 1a 00 00 // Link zu BBox-Index
+ce cc 0b 00 b8 55 48 00 26 df 0b 00 d3 3b 48 00  28 e2 0e 80
+
+Offset 0x0178 (BBox-Index, Level 2)
+08 b5 d8 04 // Was zum Geier ist das?
+f0 a8 0b 00 d3 3b 48 00 c1 24 0c 00 e0 36 48 00  cc 5e 00 80 // Link to POI-Index
+c1 24 0c 00 d3 3b 48 00 57 8b 0c 00 e0 36 48 00  f1 6a 00 80 // Link to POI-Index
+57 8b 0c 00 fc 37 48 00 7b 02 10 00 e0 36 48 00  1c 02 00 00 // Link zu BBox-Index
+57 8b 0c 00 88 3a 48 00 7b 02 10 00 21 39 48 00  85 92 00 80 // Link to POI-Index
+57 8b 0c 00 d3 3b 48 00 09 51 0d 00 88 3a 48 00  d3 a7 00 80 // Link to POI-Index
+...
+
+Offset 0x021c (BBox-Index, Level 3)
+02 a8 ec 04 // Was zum Geier ist das?
+57 8b 0c 00 fc 37 48 00 7b 02 10 00 6a 37 48 00 d6 77 00 80 // Link to POI-Index
+57 8b 0c 00 6a 37 48 00 7b 02 10 00 e0 36 48 00 e0 83 00 80 // Link to POI-Index
+
+Offset 0x0248 (BBox-Index, Level 2)
+08 8d ad 02
+f0 a8 0b 00 e0 36 48 00 d1 0c 0c 00 56 32 48 00 a1 db 00 80 // Link to POI-Index
+d1 0c 0c 00 d0 34 48 00 bd 91 0c 00 56 32 48 00 82 e7 00 80 // Link to POI-Index
+d1 0c 0c 00 e0 36 48 00 a6 99 0c 00 d0 34 48 00 b0 f2 00 80 // Link to POI-Index
+bd 91 0c 00 d0 34 48 00 7b 02 10 00 9f 33 48 00 ec 02 00 00 // Link zu BBox-Index
+...
+
+Offset 0x02ec (BBox-Index, Level 3)
+02 46 0b 05
+bd 91 0c 00 d0 34 48 00 7b 02 10 00 2f 34 48 00 a3 fd 00 80
+bd 91 0c 00 2f 34 48 00 7b 02 10 00 9f 33 48 00 8e 0c 01 80
+
+
+===============================================================
+Ideen zur Partitionierung
+
+Min. Anzahl POIs pro POI-Block: 16 (Konfigurierbar machen)
+Max. Anazhl POIs pro POI-Block: 32 (Konfigurierbar machen)
+
+Wenn möglich soll ein BBox-Index der Grösse 8 erstellt werden.
+Bei 19 BBoxen soll die Aufteilung also 8-8-3 und nicht etwa 7-6-6
+gemacht werden.
+
+POIs mit identischen Koordinaten dürfen NICHT auseinandergenommen werden.
+Die müssen immer im gleichen POI-Block landen. Auch wenn es mehr als
+16 sind! Bei 'Wieviel' Betrachtungen sind POIs mit gleichen Koordinaten
+grundsätzlich als 1 zu zählen!
+
+===============================================================
+Einfacher!
+(BBoxen mit Höhe oder Breite 0 sind zu vermeiden => An den Ecken etwas Auf- und Abrunden!)
+
+ 1 bis  31 POIs ==> POI-Block
+32 bis 271? POIs ==> 2 bis 8 BBox-Blocks mit jeweils 16 bzw. im ersten mit 17 bis 31 POIs
+ab 272? POIs ==> 2 bis 8 BBox-Blocks mit jeweils 256 POIs bzw. im ersten mit 16 bis 271 POIs
+usw.
+
+Aufteilen:
+2: Anteilsmässig an der längeren Seite
+3: Falls Verhältnis > 1:1.414 dann Dritteln an der längeren Seite, sonst
+   zuerst 1/3 und der Rest noch 1/2
+4: Zwei Mal Halbe-Halbe
+5: 2/5 und 3/5 bilden dann wie bei 2: bzw. 3:
+6: Dritteln an der längeren Seite, dann jeweils Halbe-Halbe
+7:
+8: Drei Mal Halbe-Halbe, angefangen an der längeren Seite
