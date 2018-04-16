@@ -37,7 +37,7 @@ fun main(args: Array<String>) {
 
     cmdArgs.inputFiles.forEach { inputFile ->
         if (Files.exists(Paths.get(inputFile))) {
-            RupiConverter(cmdArgs.name, inputFile, cmdArgs.outputPath, cmdArgs.count).convert()
+            RupiConverter(cmdArgs.name, inputFile, cmdArgs.outputPath).convert()
         } else {
             LOGGER.error("File $inputFile does not exist - Ignoring")
         }

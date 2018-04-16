@@ -17,12 +17,7 @@ class SygicPOIWriterV2(
         out.writeShort(compress(categoryName.length))
         out.writeUnicodeString(categoryName)
 
-        // Aufteilen der Waypoints!!
-        if (waypoints.size < 128 + 16) {
-            PoiBlock(categoryName, waypoints).write(out)
-        } else {
-            BBoxBlock(categoryName, waypoints).write(out)
-        }
+        BBoxBlock(categoryName, waypoints).write(out, 0)
 
         // Write byte Array to disk
         val outStream = FileOutputStream(outputFile)
