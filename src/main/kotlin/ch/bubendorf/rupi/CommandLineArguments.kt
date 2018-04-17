@@ -21,6 +21,9 @@ class CommandLineArguments {
     @Parameter(names = arrayOf("-n", "--name"), description = "name", required = false)
     var name = ""
 
+    @Parameter(names = arrayOf("-e", "--encoding"), description = "Encoding to use", required = false)
+    var encoding = "iso-8859-1"
+
     /*@Parameter(names = arrayOf("-t", "--tasks"), description = "Number of parallel tasks", required = false)
     var tasks = -1*/
 

@@ -30,9 +30,10 @@ abstract class Block(val categoryName: String,
         }
     }
 
-    abstract fun write(outputStream: PoiOutputStream, level: Int)
+    abstract fun write(outputStream: PoiOutputStream, level: String)
 
     abstract val marker: Int
+    abstract val type : String
 
     protected fun calcNumberOfBlocks(waypoints: Int, maxBlockSize: Int): Int {
         var numberOfBlocks = waypoints / maxBlockSize

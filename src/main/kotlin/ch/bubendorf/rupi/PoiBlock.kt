@@ -8,8 +8,11 @@ class PoiBlock(categoryName: String,
     override val marker: Int
         get() = Integer.MIN_VALUE
 
-    override fun write(outputStream: PoiOutputStream, level: Int) {
-        LOGGER.debug("Write PoiBlock  (Level=$level, Offset=0x${outputStream.position.toString(16)}, Size=${waypoints.size})")
+    override val type: String
+        get() = "POI"
+
+    override fun write(outputStream: PoiOutputStream, level: String) {
+//        LOGGER.debug("Write PoiBlock  (Level=$level, Offset=0x${outputStream.position.toString(16)}, Size=${waypoints.size}, ${boundingBox})")
 
         // Marker
         /*  outputStream.write(1)

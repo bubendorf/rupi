@@ -19,7 +19,8 @@ import java.nio.file.Paths
 class RupiConverter(
         private var name: String = "",
         private var inputFile: String = "",
-        private var outputPath: String = "") {
+        private var outputPath: String = "",
+        private var encoding: String="iso-8859-1") {
 
     private val LOGGER = LoggerFactory.getLogger(RupiConverter::class.java.simpleName)
 
@@ -42,7 +43,7 @@ class RupiConverter(
         LOGGER.info("Converting $categoryName")
 
         // Die Datei in den Speicher laden
-        val reader = InputStreamReader(FileInputStream(inputFile), "iso-8859-1")
+        val reader = InputStreamReader(FileInputStream(inputFile), encoding)
         val lines = reader.readLines()
         reader.close()
 

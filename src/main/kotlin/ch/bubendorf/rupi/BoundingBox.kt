@@ -1,7 +1,7 @@
 package ch.bubendorf.rupi
 
 
-class BoundingBox(list: Collection<Waypoint>) {
+class BoundingBox(list: Collection<Coordinate>) {
     var minLatitude = 90.0
     var maxLatitude = -90.0
 
@@ -33,24 +33,24 @@ class BoundingBox(list: Collection<Waypoint>) {
     }
 
     init {
-        for (waypoint in list) {
-            if (waypoint.latitude > maxLatitude) {
-                maxLatitude = waypoint.latitude
+        for (coordinate in list) {
+            if (coordinate.latitude > maxLatitude) {
+                maxLatitude = coordinate.latitude
             }
-            if (waypoint.latitude < minLatitude) {
-                minLatitude = waypoint.latitude
+            if (coordinate.latitude < minLatitude) {
+                minLatitude = coordinate.latitude
             }
-            if (waypoint.longitude > maxLongitude) {
-                maxLongitude = waypoint.longitude
+            if (coordinate.longitude > maxLongitude) {
+                maxLongitude = coordinate.longitude
             }
-            if (waypoint.longitude < minLongitude) {
-                minLongitude = waypoint.longitude
+            if (coordinate.longitude < minLongitude) {
+                minLongitude = coordinate.longitude
             }
         }
     }
 
     override fun toString(): String {
-        return "BoundingBox(minLatitude=$minLatitude, maxLatitude=$maxLatitude, minLongitude=$minLongitude, maxLongitude=$maxLongitude)"
+        return "BBox(minLat=$minLatitude, maxLat=$maxLatitude, minLon=$minLongitude, maxLon=$maxLongitude)"
     }
 
 

@@ -17,7 +17,7 @@ class SygicPOIWriterV2(
         out.writeShort(compress(categoryName.length))
         out.writeUnicodeString(categoryName)
 
-        BBoxBlock(categoryName, waypoints).write(out, 0)
+        BBoxBlock(categoryName, waypoints).write(out, "")
 
         // Write byte Array to disk
         val outStream = FileOutputStream(outputFile)
