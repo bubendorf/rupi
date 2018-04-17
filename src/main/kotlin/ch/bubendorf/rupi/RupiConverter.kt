@@ -40,7 +40,8 @@ class RupiConverter(
                 outputPath
             }
         }
-        LOGGER.info("Converting $categoryName")
+        LOGGER.info("Start converting $categoryName")
+        val startTime = System.currentTimeMillis()
 
         // Die Datei in den Speicher laden
         val reader = InputStreamReader(FileInputStream(inputFile), encoding)
@@ -61,11 +62,13 @@ class RupiConverter(
                     .map { Waypoint(it) }
 
             val bb = BoundingBox(waypoints)
-            LOGGER.info("BoundingBox: $bb, width=${bb.getWidthtInMeters().toInt()}m, height=${bb.getHeightInMeters().toInt()}m")
+            LOGGER.debug("BoundingBox: $bb, width=${bb.getWidthtInMeters().toInt()}m, height=${bb.getHeightInMeters().toInt()}m")
 
             // Write everything to RUPI file
             SygicPOIWriterV2(categoryName, outFile + ".rupi").write(waypoints)
-            LOGGER.info("$categoryName-Converted ${waypoints.size} waypoints to ${outFile + ".rupi"} ($bb)")
+
+            val durationMillis = System.currentTimeMillis() - startTime
+            LOGGER.info("$categoryName-Converted ${waypoints.size} waypoints to ${outFile + ".rupi"} in ${durationMillis}ms")
         }
     }
 

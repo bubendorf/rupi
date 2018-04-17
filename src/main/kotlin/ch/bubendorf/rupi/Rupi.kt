@@ -4,6 +4,8 @@ import com.beust.jcommander.JCommander
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
 import java.nio.file.Paths
+import java.util.concurrent.Callable
+import java.util.concurrent.Executors
 
 /*
 Ein paar Feststellungen:
@@ -35,13 +37,24 @@ fun main(args: Array<String>) {
         System.exit(2)
     }
 
-    cmdArgs.inputFiles.forEach { inputFile ->
-        if (Files.exists(Paths.get(inputFile))) {
-            RupiConverter(cmdArgs.name, inputFile, cmdArgs.outputPath, cmdArgs.encoding).convert()
-        } else {
-            LOGGER.error("File $inputFile does not exist - Ignoring")
+    val tasks = cmdArgs.inputFiles.map { inputFile ->
+        Callable {
+            if (Files.exists(Paths.get(inputFile))) {
+                RupiConverter(cmdArgs.name, inputFile, cmdArgs.outputPath, cmdArgs.encoding).convert()
+            } else {
+                LOGGER.error("File $inputFile does not exist - Ignoring")
+            }
         }
+    }.toList()
+
+    var numberOfTasks = cmdArgs.tasks
+    if (numberOfTasks <= 0) {
+        numberOfTasks = Runtime.getRuntime().availableProcessors()
     }
+
+    val executorService = Executors.newFixedThreadPool(numberOfTasks)
+    executorService.invokeAll(tasks)
+    executorService.shutdown()
 
     System.exit(0)
 }

@@ -18,14 +18,14 @@ class CommandLineArguments {
     @Parameter(names = arrayOf("-o", "--outputPath"), description = "Output path", required = false)
     var outputPath = "."
 
-    @Parameter(names = arrayOf("-n", "--name"), description = "name", required = false)
+    @Parameter(names = arrayOf("-n", "--name"), description = "Category name. Defaults to the name of the input file", required = false)
     var name = ""
 
     @Parameter(names = arrayOf("-e", "--encoding"), description = "Encoding to use", required = false)
     var encoding = "iso-8859-1"
 
-    /*@Parameter(names = arrayOf("-t", "--tasks"), description = "Number of parallel tasks", required = false)
-    var tasks = -1*/
+    @Parameter(names = arrayOf("-t", "--tasks"), description = "Number of parallel tasks", required = false)
+    var tasks = -1
 
     @Parameter(description = "input files")
     var inputFiles = ArrayList<String>()

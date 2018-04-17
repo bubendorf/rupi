@@ -1,7 +1,5 @@
 package ch.bubendorf.rupi
 
-import org.slf4j.LoggerFactory
-
 class PoiBlock(categoryName: String,
                waypoints: List<Waypoint>) : Block(categoryName, waypoints) {
 
@@ -12,16 +10,8 @@ class PoiBlock(categoryName: String,
         get() = "POI"
 
     override fun write(outputStream: PoiOutputStream, level: String) {
-//        LOGGER.debug("Write PoiBlock  (Level=$level, Offset=0x${outputStream.position.toString(16)}, Size=${waypoints.size}, ${boundingBox})")
+        LOGGER.debug("Write PoiBlock  (Level=$level, Offset=0x${outputStream.position.toString(16)}, Size=${waypoints.size}, ${boundingBox})")
 
-        // Marker
-        /*  outputStream.write(1)
-          outputStream.write(0)
-          outputStream.write(0)
-          outputStream.write(0)
-
-          outputStream.writeBoundingBox(boundingBox)
-          outputStream.writeSwapInt(outputStream.size() + 4 or Integer.MIN_VALUE) // Index zu den Indizes dieser BBox?*/
         outputStream.writeSwapInt(waypoints.size)
 
         // Make room for the index
