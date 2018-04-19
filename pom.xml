@@ -8,6 +8,9 @@
     <version>1.1</version>
     <packaging>jar</packaging>
     <name>RupiCreator</name>
+    <prerequisites>
+       <maven>3.5.3</maven>
+    </prerequisites>
 
     <developers>
         <developer>
@@ -23,6 +26,8 @@
         <kotlin.version>1.2.31</kotlin.version>
         <junit.version>4.12</junit.version>
         <targetJdk>1.8</targetJdk>
+        <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
+        <maven.compiler.plugin.version>3.7.0</maven.compiler.plugin.version>
     </properties>
 
     <dependencies>
@@ -101,7 +106,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
-                <version>3.0.2</version>
+                <version>3.1.0</version>
                 <configuration>
                     <archive>
                         <manifest>
@@ -159,9 +164,35 @@
                     </execution>
                 </executions>
                 <configuration>
+        	    <compilerPlugins>
+                        <!-- Alle Klassen und Methoden sind standardmässig 'open' -->
+            	        <plugin>all-open</plugin>
+                    </compilerPlugins>
                     <jvmTarget>${targetJdk}</jvmTarget>
                 </configuration>
+
+		<dependencies>
+	            <dependency>
+        	    	<groupId>org.jetbrains.kotlin</groupId>
+            		<artifactId>kotlin-maven-allopen</artifactId>
+            		<version>${kotlin.version}</version>
+        	    </dependency>
+		</dependencies>
             </plugin>
+
+	<!-- Don't run the java compiler -->
+	<plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+	    <version>${maven.compiler.plugin.version}</version>
+            <executions>
+                <execution>
+                    <id>default-compile</id>
+                    <phase>none</phase>
+                </execution>
+            </executions>
+        </plugin>
+
         </plugins>
     </build>
 
