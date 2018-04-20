@@ -24,6 +24,7 @@ Ein paar Feststellungen:
 private val LOGGER = LoggerFactory.getLogger(RupiConverter::class.java.simpleName)
 
 fun main(args: Array<String>) {
+    LOGGER.info("RupiCreator");
     val cmdArgs = CommandLineArguments()
     val jCommander = JCommander(cmdArgs)
     jCommander.parse(*args)
