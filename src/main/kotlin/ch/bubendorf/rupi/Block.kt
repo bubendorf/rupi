@@ -30,7 +30,7 @@ abstract class Block(val categoryName: String,
         }
     }
 
-    abstract fun write(outputStream: PoiOutputStream, level: String)
+    abstract fun write(outputStream: PoiOutputStream, level: String = "")
 
     abstract val marker: Int
     abstract val type : String

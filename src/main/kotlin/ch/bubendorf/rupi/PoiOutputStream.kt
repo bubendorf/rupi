@@ -1,7 +1,6 @@
 package ch.bubendorf.rupi
 
 import java.io.ByteArrayOutputStream
-import java.io.IOException
 
 class PoiOutputStream : ByteArrayOutputStream() {
 
@@ -34,8 +33,8 @@ class PoiOutputStream : ByteArrayOutputStream() {
     fun writeCodePointCount(str: String) {
         var count = 0
         val codePointCount = str.codePointCount(0, str.length)
-        for (i2 in 0 until codePointCount) {
-            count = combine(count, str.codePointAt(i2))
+        for (position in 0 until codePointCount) {
+            count = combine(count, str.codePointAt(position))
         }
         writeSwapInt(count)
     }
@@ -48,7 +47,7 @@ class PoiOutputStream : ByteArrayOutputStream() {
 
     fun writeUnicodeString(text: String) {
         for (i in 0 until text.length) {
-            writeShort(compress(text.codePointAt(i)))
+            writeSwapShort(text.codePointAt(i))
         }
     }
 
@@ -56,33 +55,41 @@ class PoiOutputStream : ByteArrayOutputStream() {
         write(t.toByteArray(Charsets.UTF_8))
     }
 
-    fun writeShort(i: Int) {
-        write(i.ushr(8) and 0xff)
-        write(i.ushr(0) and 0xff)
+    /**
+     * Writes a Short in big endian to the OutputStream.
+     * @param value The Short value to write
+     */
+    fun writeSwapShort(value: Int) {
+        write(value)
+        write(value.ushr(8))
     }
 
-    fun writeSwapInt(i: Int) {
-        writeInt(swap(i))
+    /**
+     * Writes an Integer in big endian to the OutputStream.
+     * @param value The Integer value to write
+     */
+    fun writeSwapInt(value: Int) {
+        write(value)
+        write(value.ushr(8))
+        write(value.ushr(16))
+        write(value.ushr(24)
+        )
     }
 
-    fun writeInt(i: Int) {
-        write(i.ushr(24) and 0xff)
-        write(i.ushr(16) and 0xff)
-        write(i.ushr(8) and 0xff)
-        write(i.ushr(0) and 0xff)
+    /**
+     * Writes an Integer in little endian to the OutputStream.
+     * @param value The Integer value to write
+     */
+    fun writeInt(value: Int) {
+        write(value.ushr(24))
+        write(value.ushr(16))
+        write(value.ushr(8))
+        write(value)
     }
 
-    private fun swap(i: Int): Int {
-        return i shr 24 and 255 or (65280 and (i shr 8)) or (16711680 and (i shl 8)) or (-16777216 and (i shl 24))
-    }
-
-    private fun compress(i: Int): Int {
-        return i shr 8 and 0x00FF or (0xFF00 and (i shl 8))
-    }
-
-    private fun combine(i: Int, i2: Int): Int {
-        val i3 = i shl 8
-        return (i3 and 268435455) + i2 xor (-268435456 and i3).ushr(24)
+    private fun combine(val1: Int, val2: Int): Int {
+        val val3 = val1 shl 8
+        return (val3 and 0xFFFFFFF) + val2 xor (-0x10000000 and val3).ushr(24)
     }
 
     fun writeBoundingBox(boundingBox: BoundingBox) {

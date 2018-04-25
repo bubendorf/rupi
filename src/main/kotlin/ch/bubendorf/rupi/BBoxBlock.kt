@@ -1,7 +1,8 @@
 package ch.bubendorf.rupi
 
 class BBoxBlock(categoryName: String,
-                waypoints: List<Waypoint>) : Block(categoryName, waypoints) {
+                waypoints: List<Waypoint>,
+                val notice: String? = null) : Block(categoryName, waypoints) {
 
     override val marker: Int
         get() = 0
@@ -48,7 +49,6 @@ class BBoxBlock(categoryName: String,
 
             val listOfList = Splitter().split(waypoints, sizeOfFirstBlock,sizeOfBBoxBlock)
             listOfList.forEach { wps ->  blocks.add(BBoxBlock(categoryName, wps)) }
-
         }
     }
 
@@ -66,6 +66,11 @@ class BBoxBlock(categoryName: String,
         for (i in 0 until blocks.size) {
             outputStream.writeBoundingBox(blocks[i].boundingBox)
             outputStream.writeInt(0) // Placeholder for the offset
+        }
+
+        // If provided add a notice, remark, etc. between the index and the data
+        if (notice != null) {
+            outputStream.writeString(notice)
         }
 
         // Write Blocks
