@@ -25,8 +25,18 @@ class RegressionTest {
         rupiTest("RupiTest040", 40)
     }
 
-    private fun rupiTest(filename: String, numberOfWaypoints: Int) {
-        val waypoints = CsvReader("src/test/resources/${filename}.csv", "iso8859-1").read()
+    @Test
+    fun umlauteISO8859() {
+        rupiTest("umlauteISO8859", 4)
+    }
+
+    @Test
+    fun umlauteUTF8() {
+        rupiTest("umlauteUTF8", 4, "utf-8")
+    }
+
+    private fun rupiTest(filename: String, numberOfWaypoints: Int, encoding:String="iso8859-1") {
+        val waypoints = CsvReader("src/test/resources/${filename}.csv", encoding).read()
         assertEquals(numberOfWaypoints, waypoints.size)
 
         val poiWriter = SygicPOIWriter(filename)
