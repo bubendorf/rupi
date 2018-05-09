@@ -38,7 +38,7 @@ class RupiConverter(
                 outputPath
             }
         }
-        LOGGER.info("Start converting $categoryName")
+        LOGGER.info("RupiCreator Version ${BuildVersion.getBuildVersion()} - Start converting $categoryName")
         val startTime = System.currentTimeMillis()
 
         // Die Datei in den Speicher laden
