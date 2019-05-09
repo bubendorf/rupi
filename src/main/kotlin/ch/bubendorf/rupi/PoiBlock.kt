@@ -10,7 +10,7 @@ class PoiBlock(categoryName: String,
         get() = "POI"
 
     override fun write(outputStream: PoiOutputStream, level: String) {
-        LOGGER.debug("Write PoiBlock  (Level=$level, Offset=0x${outputStream.position.toString(16)}, Size=${waypoints.size}, ${boundingBox})")
+        logger.debug("Write PoiBlock  (Level=$level, Offset=0x${outputStream.position.toString(16)}, Size=${waypoints.size}, $boundingBox)")
 
         outputStream.writeSwapInt(waypoints.size)
 
@@ -21,12 +21,9 @@ class PoiBlock(categoryName: String,
         }
 
         val offsets = IntArray(waypoints.size)
-        var number = 0
-        for (waypoint in waypoints) {
+        for ((number, waypoint) in waypoints.withIndex()) {
             offsets[number] = outputStream.size()
             writeWaypoint(outputStream, number, waypoint)
-
-            number++
         }
 
         // Write Index

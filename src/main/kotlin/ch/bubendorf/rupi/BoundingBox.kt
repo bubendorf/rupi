@@ -2,11 +2,11 @@ package ch.bubendorf.rupi
 
 
 class BoundingBox(list: Collection<Coordinate>) {
-    var minLatitude = 90.0
-    var maxLatitude = -90.0
+    private var minLatitude = 90.0
+    private var maxLatitude = -90.0
 
-    var minLongitude = 180.0
-    var maxLongitude = -180.0
+    private var minLongitude = 180.0
+    private var maxLongitude = -180.0
 
     val maxLatInt: Int
         get() = Math.round(maxLatitude * 100000.0).toInt()
@@ -26,7 +26,7 @@ class BoundingBox(list: Collection<Coordinate>) {
         return p1.getDistanceTo(p2)
     }
 
-    fun getWidthtInMeters(): Double {
+    fun getWidthInMeters(): Double {
         val p1 = Coordinate((maxLatitude + minLatitude) / 2, minLongitude)
         val p2 = Coordinate((maxLatitude + minLatitude) / 2, maxLongitude)
         return p1.getDistanceTo(p2)

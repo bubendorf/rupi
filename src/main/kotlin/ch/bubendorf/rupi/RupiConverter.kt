@@ -20,7 +20,7 @@ class RupiConverter(
         private var outputPath: String = "",
         private var encoding: String = "iso-8859-1") {
 
-    private val LOGGER = LoggerFactory.getLogger(RupiConverter::class.java.simpleName)
+    private val logger = LoggerFactory.getLogger(RupiConverter::class.java.simpleName)
 
     fun convert() {
         // Erst mal die Parameter ergänzen falls diese leer sind
@@ -38,20 +38,20 @@ class RupiConverter(
                 outputPath
             }
         }
-        LOGGER.info("RupiCreator Version ${BuildVersion.getBuildVersion()} - Start converting $categoryName")
+        logger.info("RupiCreator Version ${BuildVersion.getBuildVersion()} - Start converting $categoryName")
         val startTime = System.currentTimeMillis()
 
         // Die Datei in den Speicher laden
         val waypoints = CsvReader(inputFile, encoding).read()
         val bb = BoundingBox(waypoints)
-        LOGGER.debug("BoundingBox: $bb, width=${bb.getWidthtInMeters().toInt()}m, height=${bb.getHeightInMeters().toInt()}m")
+        logger.debug("BoundingBox: $bb, width=${bb.getWidthInMeters().toInt()}m, height=${bb.getHeightInMeters().toInt()}m")
 
         // Convert to RUPI and write everything to RUPI file
         val poiWriter = SygicPOIWriter(categoryName)
         poiWriter.convert(waypoints)
-        poiWriter.writeToFile(outputFile + ".rupi")
+        poiWriter.writeToFile("$outputFile.rupi")
 
         val durationMillis = System.currentTimeMillis() - startTime
-        LOGGER.info("$categoryName-Converted ${waypoints.size} waypoints to ${outputFile + ".rupi"} in ${durationMillis}ms")
+        logger.info("$categoryName-Converted ${waypoints.size} waypoints to ${"$outputFile.rupi"} in ${durationMillis}ms")
     }
 }

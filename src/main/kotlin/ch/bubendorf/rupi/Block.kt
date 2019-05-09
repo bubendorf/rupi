@@ -1,5 +1,6 @@
 package ch.bubendorf.rupi
 
+import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 //const val DEFAULT_POIS_PER_POIBLOCK = 256
@@ -14,7 +15,7 @@ const val MAX_POIS_PER_BBOXBLOCK = MAX_BLOCKS_PER_BBOXBLOCK * DEFAULT_POIS_PER_B
 abstract class Block(val categoryName: String,
                      unsortedWaypoints: List<Waypoint>) {
 
-    protected val LOGGER = LoggerFactory.getLogger(Block::class.java.simpleName)
+    protected val logger: Logger = LoggerFactory.getLogger(Block::class.java.simpleName)
 
     val boundingBox = BoundingBox(unsortedWaypoints)
     val waypoints: List<Waypoint>
@@ -22,7 +23,7 @@ abstract class Block(val categoryName: String,
     init {
         // Sortieren der Waypoints an der längeren Seite der BoundingBox
         val heightInMeters = boundingBox.getHeightInMeters()
-        val widthtInMeters = boundingBox.getWidthtInMeters()
+        val widthtInMeters = boundingBox.getWidthInMeters()
         waypoints = if (heightInMeters < widthtInMeters) {
             unsortedWaypoints.sortedBy { coordinate -> coordinate.longitude }
         } else {

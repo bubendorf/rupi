@@ -30,7 +30,5 @@ constructor(longitude: Double,
             if (record.size > 8) record[8] else "",
             if (record.size > 9) record[9] else "")
 
-    constructor(record: Array<String>) : this(record.toList())
-
-
+    //constructor(record: Array<String>) : this(record.toList())
 }

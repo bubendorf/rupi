@@ -30,7 +30,7 @@ class Splitter {
      * Wenn Anzahl der Teillisten >1 ==> Zwei Haufen bilden und die Wegpunkte entlang der längeren
      * Seite der BoundingBox auf die beiden Haufen verteilen. Rekursiv weitermachen bis alles verteilt ist.
      */
-    fun split(waypoints :List<Waypoint>, blockSizes: List<Int>) : List<List<Waypoint>> {
+    private fun split(waypoints :List<Waypoint>, blockSizes: List<Int>) : List<List<Waypoint>> {
         if (blockSizes.size == 1){
             return listOf(waypoints)
         }
@@ -45,8 +45,8 @@ class Splitter {
         // Sortieren der Waypoints an der längeren Seite der BoundingBox
         val boundingBox = BoundingBox(waypoints)
         val heightInMeters = boundingBox.getHeightInMeters()
-        val widthtInMeters = boundingBox.getWidthtInMeters()
-        val sortedWaypoints = if (heightInMeters < widthtInMeters) {
+        val widthInMeters = boundingBox.getWidthInMeters()
+        val sortedWaypoints = if (heightInMeters < widthInMeters) {
             waypoints.sortedBy { coordinate -> coordinate.longitude }
         } else {
             waypoints.sortedBy { coordinate -> coordinate.latitude }

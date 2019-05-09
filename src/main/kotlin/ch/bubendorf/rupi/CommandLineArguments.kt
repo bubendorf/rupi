@@ -7,24 +7,24 @@ import java.util.ArrayList
 
 class CommandLineArguments {
 
-    private val LOGGER = LoggerFactory.getLogger(CommandLineArguments::class.java.simpleName)
+    private val logger = LoggerFactory.getLogger(CommandLineArguments::class.java.simpleName)
 
-    @Parameter(names = arrayOf("-h", "--help"), help = true)
+    @Parameter(names = ["-h", "--help"], help = true)
     var isHelp: Boolean = false
 
     /*@Parameter(names = arrayOf("-v", "--verbose"))
     var isVerbose: Boolean = false*/
 
-    @Parameter(names = arrayOf("-o", "--outputPath"), description = "Output path", required = false)
+    @Parameter(names = ["-o", "--outputPath"], description = "Output path", required = false)
     var outputPath = "."
 
-    @Parameter(names = arrayOf("-n", "--name"), description = "Category name. Defaults to the name of the input file", required = false)
+    @Parameter(names = ["-n", "--name"], description = "Category name. Defaults to the name of the input file", required = false)
     var name = ""
 
-    @Parameter(names = arrayOf("-e", "--encoding"), description = "Encoding to use", required = false)
+    @Parameter(names = ["-e", "--encoding"], description = "Encoding to use", required = false)
     var encoding = "iso-8859-1"
 
-    @Parameter(names = arrayOf("-t", "--tasks"), description = "Number of parallel tasks", required = false)
+    @Parameter(names = ["-t", "--tasks"], description = "Number of parallel tasks", required = false)
     var tasks = -1
 
     @Parameter(description = "input files")
@@ -35,7 +35,7 @@ class CommandLineArguments {
             // Check if the output path exists
             val outputPathFile = File(outputPath)
             if (!outputPathFile.exists() || !outputPathFile.isDirectory) {
-                LOGGER.error("Output path '$outputPath' does not exist or is not a directory!")
+                logger.error("Output path '$outputPath' does not exist or is not a directory!")
                 return false
             }
             return true
