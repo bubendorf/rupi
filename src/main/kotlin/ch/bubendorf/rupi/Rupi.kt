@@ -41,7 +41,7 @@ fun main(args: Array<String>) {
     val tasks = cmdArgs.inputFiles.map { inputFile ->
         Callable {
             if (Files.exists(Paths.get(inputFile))) {
-                RupiConverter(cmdArgs.name, inputFile, cmdArgs.outputPath, cmdArgs.encoding).convert()
+                RupiConverter(cmdArgs.name, inputFile, cmdArgs.outputPath, cmdArgs.encoding, cmdArgs.remark).convert()
             } else {
                 LOGGER.error("File $inputFile does not exist - Ignoring")
             }

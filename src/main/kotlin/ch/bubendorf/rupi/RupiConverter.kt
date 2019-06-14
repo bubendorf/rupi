@@ -18,7 +18,8 @@ class RupiConverter(
         private var name: String = "",
         private var inputFile: String = "",
         private var outputPath: String = "",
-        private var encoding: String = "iso-8859-1") {
+        private var encoding: String = "iso-8859-1",
+        private var remark: String) {
 
     private val logger = LoggerFactory.getLogger(RupiConverter::class.java.simpleName)
 
@@ -48,6 +49,7 @@ class RupiConverter(
 
         // Convert to RUPI and write everything to RUPI file
         val poiWriter = SygicPOIWriter(categoryName)
+        poiWriter.remark = remark
         poiWriter.convert(waypoints)
         poiWriter.writeToFile("$outputFile.rupi")
 

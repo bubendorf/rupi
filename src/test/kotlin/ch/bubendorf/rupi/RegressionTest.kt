@@ -36,14 +36,15 @@ class RegressionTest {
     }
 
     private fun rupiTest(filename: String, numberOfWaypoints: Int, encoding:String="iso8859-1") {
-        val waypoints = CsvReader("src/test/resources/${filename}.csv", encoding).read()
+        val waypoints = CsvReader("src/test/resources/$filename.csv", encoding).read()
         assertEquals(numberOfWaypoints, waypoints.size)
 
         val poiWriter = SygicPOIWriter(filename)
+        poiWriter.remark = "Rupi Creator by Markus Bubendorf"
         poiWriter.convert(waypoints)
         assertNotNull(poiWriter.byteArray)
 
-        val allBytes = Files.readAllBytes(Paths.get("src/test/resources/${filename}.rupi"))
+        val allBytes = Files.readAllBytes(Paths.get("src/test/resources/$filename.rupi"))
         val equals = Arrays.equals(allBytes, poiWriter.byteArray)
         if (!equals) {
             poiWriter.writeToFile("src/test/resources/${filename}_New.rupi")

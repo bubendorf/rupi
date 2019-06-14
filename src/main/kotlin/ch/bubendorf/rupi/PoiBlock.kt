@@ -10,7 +10,7 @@ class PoiBlock(categoryName: String,
         get() = "POI"
 
     override fun write(outputStream: PoiOutputStream, level: String) {
-        logger.debug("Write PoiBlock  (Level=$level, Offset=0x${outputStream.position.toString(16)}, Size=${waypoints.size}, $boundingBox)")
+        logger.debug("Write PoiBlock (Level=$level, Offset=0x${outputStream.position.toString(16)}, Size=${waypoints.size}, $boundingBox)")
 
         outputStream.writeSwapInt(waypoints.size)
 

@@ -27,6 +27,9 @@ class CommandLineArguments {
     @Parameter(names = ["-t", "--tasks"], description = "Number of parallel tasks", required = false)
     var tasks = -1
 
+    @Parameter(names = ["-r", "--remark"], description = "Remark", required = false)
+    var remark = "Rupi Creator Version ${BuildVersion.getBuildVersion()} by Markus Bubendorf"
+
     @Parameter(description = "input files")
     var inputFiles = ArrayList<String>()
 

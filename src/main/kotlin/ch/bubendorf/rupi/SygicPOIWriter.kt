@@ -9,6 +9,7 @@ class SygicPOIWriter(
         private val categoryName: String) {
 
     var byteArray: ByteArray? = null
+    var remark = ""
 
     fun convert(waypoints: List<Waypoint>) {
 
@@ -20,7 +21,7 @@ class SygicPOIWriter(
         out.writeSwapShort(categoryName.length)
         out.writeUnicodeString(categoryName)
 
-        BBoxBlock(categoryName, waypoints, "Rupi Creator by Markus Bubendorf").write(out)
+        BBoxBlock(categoryName, waypoints, remark).write(out)
         byteArray = out.toByteArray()
     }
 
