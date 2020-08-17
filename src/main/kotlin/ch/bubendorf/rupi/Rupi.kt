@@ -6,6 +6,7 @@ import java.nio.file.Files
 import java.nio.file.Paths
 import java.util.concurrent.Callable
 import java.util.concurrent.Executors
+import kotlin.system.exitProcess
 
 /*
 Ein paar Feststellungen:
@@ -31,11 +32,11 @@ fun main(args: Array<String>) {
 
     if (cmdArgs.isHelp) {
         jCommander.usage()
-        System.exit(1)
+        exitProcess(1)
     }
 
     if (!cmdArgs.isValid) {
-        System.exit(2)
+        exitProcess(2)
     }
 
     val tasks = cmdArgs.inputFiles.map { inputFile ->
@@ -57,6 +58,6 @@ fun main(args: Array<String>) {
     executorService.invokeAll(tasks)
     executorService.shutdown()
 
-    System.exit(0)
+    exitProcess(0)
 }
 

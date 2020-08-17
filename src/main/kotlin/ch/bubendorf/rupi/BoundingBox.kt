@@ -1,5 +1,7 @@
 package ch.bubendorf.rupi
 
+import kotlin.math.roundToInt
+
 
 class BoundingBox(list: Collection<Coordinate>) {
     private var minLatitude = 90.0
@@ -9,16 +11,16 @@ class BoundingBox(list: Collection<Coordinate>) {
     private var maxLongitude = -180.0
 
     val maxLatInt: Int
-        get() = Math.round(maxLatitude * 100000.0).toInt()
+        get() = (maxLatitude * 100000.0).roundToInt()
 
     val minLatInt: Int
-        get() = Math.round(minLatitude * 100000.0).toInt()
+        get() = (minLatitude * 100000.0).roundToInt()
 
     val maxLonInt: Int
-        get() = Math.round(maxLongitude * 100000.0).toInt()
+        get() = (maxLongitude * 100000.0).roundToInt()
 
     val minLonInt: Int
-        get() = Math.round(minLongitude * 100000.0).toInt()
+        get() = (minLongitude * 100000.0).roundToInt()
 
     fun getHeightInMeters(): Double {
         val p1 = Coordinate((maxLongitude + minLongitude) / 2, minLatitude)

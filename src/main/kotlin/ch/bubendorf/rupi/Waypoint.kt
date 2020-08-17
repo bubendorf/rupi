@@ -1,5 +1,7 @@
 package ch.bubendorf.rupi
 
+import kotlin.math.roundToInt
+
 // Aus der Sygic Dokumentation:
 // For each POI the parameters must be arranged in following order:
 // longitude | latitude | name | address | phone | fax | web | email | short description | long description
@@ -15,8 +17,8 @@ constructor(longitude: Double,
             val email: String = "",
             val shortDescription: String = "",
             val longDescription: String = "") : Coordinate(longitude, latitude) {
-    val longitudeInt = Math.round(longitude * 100000.0).toInt()
-    val latitudeInt = Math.round(latitude * 100000.0).toInt()
+    val longitudeInt = (longitude * 100000.0).roundToInt()
+    val latitudeInt = (latitude * 100000.0).roundToInt()
 
     constructor(record: List<String>) : this(
             record[0].toDouble(),

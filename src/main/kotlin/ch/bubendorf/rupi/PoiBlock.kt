@@ -16,7 +16,7 @@ class PoiBlock(categoryName: String,
 
         // Make room for the index
         var startPosition = outputStream.position
-        for (i in 0 until waypoints.size) {
+        for (i in waypoints.indices) {
             outputStream.writeInt(0)
         }
 

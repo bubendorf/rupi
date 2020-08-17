@@ -4,6 +4,7 @@ import java.io.ByteArrayOutputStream
 
 class PoiOutputStream : ByteArrayOutputStream() {
 
+    @Suppress("UNUSED_PARAMETER")
     var position: Int
         get() = count
         set(value) {
@@ -46,7 +47,7 @@ class PoiOutputStream : ByteArrayOutputStream() {
     }
 
     fun writeUnicodeString(text: String) {
-        for (i in 0 until text.length) {
+        for (i in text.indices) {
             writeSwapShort(text.codePointAt(i))
         }
     }
