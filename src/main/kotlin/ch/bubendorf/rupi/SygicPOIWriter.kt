@@ -28,7 +28,7 @@ class SygicPOIWriter(
     // Write byte Array to disk
     fun writeToFile(outputFile: String) {
         val outStream = FileOutputStream(outputFile)
-        outStream.write(byteArray)
+        outStream.write(byteArray!!)
         outStream.close()
     }
 }
