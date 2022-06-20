@@ -23,7 +23,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <kotlin.version>1.4.10</kotlin.version>
+        <kotlin.version>1.6.0</kotlin.version>
         <junit.version>4.13.1</junit.version>
         <targetJdk>1.8</targetJdk>
         <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
